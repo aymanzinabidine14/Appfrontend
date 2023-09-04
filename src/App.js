@@ -7,12 +7,21 @@ import Login from './page/Login';
 import {BrowserRouter,Link,Route,Routes} from "react-router-dom"
 import Register from './page/Register';
 import Dashboard from './page/Dashboard';
+import AddParticipation from './page/AddParticipation';
+import Test from './page/test';
+import UpdateSandage from './page/UpdateSandage';
 
 
+import EventList from './eventpages/EventList';
+import CreateEvent from './eventpages/CreateEvent';
+import UpdateEvent from './eventpages/UpdateEvent';
+import EventDetails from './eventpages/EventDetails';
+import EventManagement from './eventpages/EventManagement';
 
+import axios from 'axios';
+import  React,{ useEffect,useState,useParams } from 'react';
 
 function App() {
-
 
   return (
 
@@ -38,14 +47,25 @@ function App() {
       </div>
     </div>
   </nav>
+
+
     <Routes>
-    <Route path="/Home" element={<Home/>}></Route>
+    <Route path="/home" element={<Home/>}></Route>
     <Route path="/Newsandage" element={<NewSandage/>}></Route>
-    <Route path="/SandageInfo" element={<SandageInfo/>}></Route>
+    <Route path="/SandageInfo/:id" element={<SandageInfo/>}></Route>
     <Route path="/Register" element= { <Register/>} />
     <Route path="/" element= { <Login/>} />
     <Route path="/Dashboard" element={<Dashboard/>}/>
+    <Route path="/AddParticipation/:id" element={<AddParticipation/>}/>
+    <Route path="/test" element={<Test/>}/>
+    <Route path="/UpdateSandage/:id" element={<UpdateSandage/>}/>
 
+    <Route path="/admin" element={<EventManagement />} />
+    <Route path="/add" element={<CreateEvent />} />
+    <Route path="/update" element={<UpdateEvent />} />
+    <Route path="/event/:idbooking" element={<EventDetails/>} />
+    <Route path="/eventList" element={<EventList/>} />
+ 
 
     </Routes>
     </BrowserRouter>

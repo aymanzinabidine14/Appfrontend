@@ -3,7 +3,7 @@ import  React,{ useEffect,useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faCalendar, faCalendarDay, faCalendarDays, faDeleteLeft, faTrash, faTree, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { Navigate } from "react-router-dom";
+import { Navigate,useParams} from "react-router-dom";
 
 import Fullcalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -21,28 +21,41 @@ export const sandageApi=axios.create({
       return sandageApi.post('/saveOption',myoption);
   }
   
-  export const saveSandage=(mysandage,iduser)=>{
-      return sandageApi.post(`/saveSandage/${iduser}`,mysandage);
+  export const sandageUpdate=(mysandage,idsandage)=>{
+      return sandageApi.post(`/UpdateSandage/${idsandage}`,mysandage);
   }
 
+function UpdateSandage() {
 
-function NewSandage() {
-  
-const currentuser = JSON.parse(localStorage.getItem('user'));
-
+const {id} = useParams();
 
 const [shouldRedirect, setShouldRedirect] = useState(false);
 
 
 const [Title, setTitle]=useState('');
 const [Description, setDescription]=useState(''); 
-
 const [MyDate, setDate] = useState('');
 const [MyTime, setTime] = useState('');
 const [selectedTime, setSelectedTime] = useState(''); 
-
 const [Events, setEvents] = useState([]);
+const [Newvents,setNewEvents]=useState([]);
 
+const [SandageInfo,setSandageInfo]=useState('');
+
+const [Eventpoursupprimer,setEventpoursupprimer]=useState([]);
+
+useEffect(() => { loadSandage();},[]);
+const loadSandage =()=>{
+    axios.get(`http://localhost:8080/sandage/${id}`)
+    .then(resp=>{
+      const sandage=resp.data;
+      setSandageInfo(sandage);
+      setTitle(sandage.titre);
+      setEvents(sandage.options);
+})
+};
+
+const deleteOption = async (idOption) => {await axios.delete(`http://localhost:8080/deleteOptionById/${idOption}`);};
 
 
 const handleRadioChange = (event) => {
@@ -77,55 +90,72 @@ const handleSubmit = (event) => {
     const currentTime = new Date(`1970-01-01T${MyTime}`);  
     currentTime.setMinutes(currentTime.getMinutes() + timeInMinutes);
     const formattedTime = currentTime.toTimeString().slice(0, 5);
+
     const newEvent = {
       id:Date.now(),
       date: MyDate,
       time: MyTime,
-      endtime:formattedTime,
+      endTime:formattedTime,
     };
-    setEvents([...Events, newEvent]);
+    setNewEvents([...Newvents, newEvent]);
     setDate('');
     setTime('');
     //setSelectedTime('');
-    
   }
 
 };
 
 
 const handleDeleteEvent= (myvent)=>{
-  const newEvents= Events.filter((p) => p.id !== myvent.id);
-  setEvents(newEvents);
-  }
+setEventpoursupprimer([...Eventpoursupprimer, myvent]);
+const newEvents= Events.filter((p) => p.idDate !== myvent.idDate);
+setEvents(newEvents);
+}
 
-  const handleSaveSandage= async(event)=>{
+
+
+const handleDeleteNewEvent= (myvent)=>{
+  const newEvents= Newvents.filter((p) => p.id !== myvent.id);
+  setNewEvents(newEvents);
+  }
+  
+
+
+const handleSaveSandage= async(event)=>{
     event.preventDefault();
-    let Sandage={
-      titre:Title
-    }
-    const thesandage= await saveSandage(Sandage,currentuser);
-    const createsandage=thesandage.data;
 
 
     const SavedEvents = [];
-    Events.map((myevent) => {
+    Newvents.map((myevent) => {
     const daySave = {
       date: myevent.date,
       time: myevent.time,
-      endTime:myevent.endtime
+      endTime:myevent.endTime
     };
     SavedEvents.push(daySave);
     });
 
-    
-  
+
     SavedEvents.map(async(myevent) => (
-      myevent.sandage=createsandage,
+      myevent.sandage=SandageInfo,
       await saveEvent(myevent)
-      
+
     ));
 
-    setShouldRedirect(true);
+    let Sandage={
+      titre:Title,
+    }
+    
+
+    Eventpoursupprimer.map(async(theEvent)=>(
+      deleteOption(theEvent.idDate)
+    ));
+
+    console.log(Eventpoursupprimer);
+  
+    await sandageUpdate(Sandage,id);
+
+   setShouldRedirect(true);
 
 }
 
@@ -134,15 +164,7 @@ if (shouldRedirect) {
 }
 
 
-const ListEvent = [];
-Events.map((myevent) => {
-const day = {
-  title: "myevent.titre",
-  start: myevent.date+"T"+myevent.time,
-  end:myevent.date+"T"+myevent.endtime,
-};
-ListEvent.push(day);
-});
+
 
 
   return(
@@ -212,11 +234,18 @@ type="time" className="form-control" ></input></div>
 <h2>List Options:</h2>
 
                     <ul class="list-group">
-
                     {Events.map((myevent,index) => (
                     <li class="list-group-item d-flex justify-content-between align-items-center" key={index}>
-                    Date : {myevent.date} - Time : {myevent.time}-{myevent.endtime}
+                    Date : {myevent.date} - Time : {myevent.time}-{myevent.endTime}
                     <span> <button className="btn btn-danger"onClick={()=>handleDeleteEvent(myevent)} ><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button></span>
+                    </li>
+                   ))}
+                   </ul>
+                   <ul class="list-group">
+                    {Newvents.map((mynewevent,index) => (
+                    <li class="list-group-item d-flex justify-content-between align-items-center" key={index}>
+                    Date : {mynewevent.date} - Time : {mynewevent.time}-{mynewevent.endTime}
+                    <span> <button className="btn btn-danger"onClick={()=>handleDeleteNewEvent(mynewevent)} ><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button></span>
                     </li>
                    ))}
                    </ul>
@@ -226,31 +255,6 @@ type="time" className="form-control" ></input></div>
         </div>
 </div>
 
-
-
-<div className="container mt-5">
-        <div className="card mx-auto" style={{ width: '60rem' }}>
-      
-            <div className="card-body">
-
-            <Fullcalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView={"dayGridMonth"}
-        headerToolbar={{
-          start: "today prev,next", 
-          center: "title",
-          end: "dayGridMonth,timeGridWeek,timeGridDay",
-        }}
-        height={"90vh"}
-        events={ListEvent}
-      />
- 
-
-        </div>
-        </div>
-    </div>
-
-  
     <div class="fixed-bottom fixed-bottom-bar" >
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <form onSubmit={handleSaveSandage}>
@@ -261,7 +265,7 @@ type="time" className="form-control" ></input></div>
         </div>
     )
 }
-export default NewSandage;
+export default UpdateSandage;
 
 
 

@@ -21,28 +21,36 @@ export const sandageApi=axios.create({
       return sandageApi.post('/saveOption',myoption);
   }
   
-  export const saveSandage=(mysandage,iduser)=>{
-      return sandageApi.post(`/saveSandage/${iduser}`,mysandage);
+  export const sandageUpdate=(mysandage,idsandage)=>{
+      return sandageApi.post(`/UpdateSandage/${idsandage}`,mysandage);
   }
 
 
-function NewSandage() {
-  
-const currentuser = JSON.parse(localStorage.getItem('user'));
-
+function UpdateSandage() {
 
 const [shouldRedirect, setShouldRedirect] = useState(false);
 
 
 const [Title, setTitle]=useState('');
 const [Description, setDescription]=useState(''); 
-
 const [MyDate, setDate] = useState('');
 const [MyTime, setTime] = useState('');
 const [selectedTime, setSelectedTime] = useState(''); 
-
 const [Events, setEvents] = useState([]);
 
+
+const [SandageInfo,setSandageInfo]=useState('');
+
+useEffect(() => { loadSandage();},[]);
+const loadSandage =()=>{
+    axios.get("http://localhost:8080/sandage/6")
+    .then(resp=>{
+      const sandage=resp.data;
+      setSandageInfo(sandage);
+      setTitle(sandage.titre);
+      setEvents(sandage.options);
+})
+};
 
 
 const handleRadioChange = (event) => {
@@ -77,6 +85,7 @@ const handleSubmit = (event) => {
     const currentTime = new Date(`1970-01-01T${MyTime}`);  
     currentTime.setMinutes(currentTime.getMinutes() + timeInMinutes);
     const formattedTime = currentTime.toTimeString().slice(0, 5);
+    
     const newEvent = {
       id:Date.now(),
       date: MyDate,
@@ -87,43 +96,25 @@ const handleSubmit = (event) => {
     setDate('');
     setTime('');
     //setSelectedTime('');
-    
   }
 
 };
 
 
 const handleDeleteEvent= (myvent)=>{
-  const newEvents= Events.filter((p) => p.id !== myvent.id);
-  setEvents(newEvents);
-  }
+const newEvents= Events.filter((p) => p.idDate !== myvent.idDate);
+setEvents(newEvents);
+}
 
-  const handleSaveSandage= async(event)=>{
+
+const handleSaveSandage= async(event)=>{
     event.preventDefault();
     let Sandage={
       titre:Title
     }
-    const thesandage= await saveSandage(Sandage,currentuser);
-    const createsandage=thesandage.data;
-
-
-    const SavedEvents = [];
-    Events.map((myevent) => {
-    const daySave = {
-      date: myevent.date,
-      time: myevent.time,
-      endTime:myevent.endtime
-    };
-    SavedEvents.push(daySave);
-    });
-
     
-  
-    SavedEvents.map(async(myevent) => (
-      myevent.sandage=createsandage,
-      await saveEvent(myevent)
-      
-    ));
+    const thesandage= await sandageUpdate(Sandage,2);
+    const createsandage=thesandage.data;
 
     setShouldRedirect(true);
 
@@ -134,15 +125,7 @@ if (shouldRedirect) {
 }
 
 
-const ListEvent = [];
-Events.map((myevent) => {
-const day = {
-  title: "myevent.titre",
-  start: myevent.date+"T"+myevent.time,
-  end:myevent.date+"T"+myevent.endtime,
-};
-ListEvent.push(day);
-});
+
 
 
   return(
@@ -226,31 +209,6 @@ type="time" className="form-control" ></input></div>
         </div>
 </div>
 
-
-
-<div className="container mt-5">
-        <div className="card mx-auto" style={{ width: '60rem' }}>
-      
-            <div className="card-body">
-
-            <Fullcalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView={"dayGridMonth"}
-        headerToolbar={{
-          start: "today prev,next", 
-          center: "title",
-          end: "dayGridMonth,timeGridWeek,timeGridDay",
-        }}
-        height={"90vh"}
-        events={ListEvent}
-      />
- 
-
-        </div>
-        </div>
-    </div>
-
-  
     <div class="fixed-bottom fixed-bottom-bar" >
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <form onSubmit={handleSaveSandage}>
@@ -261,7 +219,7 @@ type="time" className="form-control" ></input></div>
         </div>
     )
 }
-export default NewSandage;
+export default UpdateSandage;
 
 
 
