@@ -3,7 +3,7 @@ import  React,{ useEffect,useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css'
 import { useParams } from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faCalendarDays,faCheck,faUser,faUsers,faX} from '@fortawesome/free-solid-svg-icons';
+import {faBarsStaggered, faCalendarDays,faCheck,faCheckSquare,faUser,faUsers,faX, faXmarkSquare} from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -130,35 +130,29 @@ function AddParticipation() {
     return(
     <div>
 
-    <div class="container mt-5">
-        <div class="card mx-auto" style={{ width: '60rem' }}>
-            <div class="card-body d-flex flex-row">
+<main id="main" class="main">
 
-                <div class="col-md-6">
-                  <h2>{SandageInfo.titre}</h2>
-                  <p>{organizer.username} organise</p>  
-                </div>             
-            </div>
-        </div>
-    </div> 
+<section class="section">
+  <div class="row">
+   
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{SandageInfo.titre}</h5>
 
-    {SandageInfo.booking !== null &&
-    <div class="container mt-5">
-        <div class="card mx-auto" style={{ width: '60rem' }}>
-            <div class="card-body d-flex flex-row">
-                <div class="col-md-6">
-                  <h2>Vous avez réservé !</h2>
-                  <p>L'organisateur a choisi un horaire.</p>  
-                  <div class="card text-bg-success mb-3" style={{ width: '20rem' }}>
-                  <div class="card-body">
-                  <p class="card-text">{OptionBooked.dateF} de {OptionBooked.startTime} a {OptionBooked.endTime}</p>
-               </div>
-               </div>
-              </div>             
-            </div>
+          <p><FontAwesomeIcon icon={faBarsStaggered} size="xl"></FontAwesomeIcon> {SandageInfo.description}</p>
+
+          {SandageInfo.booking !== null &&
+            <>
+          
+
+          <div class="alert alert-success" role="alert" style={{width: '320px'}}>
+          <FontAwesomeIcon icon={faCalendarDays} size="xl"></FontAwesomeIcon> {OptionBooked.dateF} de {OptionBooked.startTime} a {OptionBooked.endTime}
+          </div>
+           </>
+        
+          }
         </div>
-    </div>   
-}
+      </div>
 
     {SandageInfo.booking === null &&
     <div className="container mt-5">
@@ -166,7 +160,7 @@ function AddParticipation() {
         <table className="table table-bordered">
     <thead>
           <tr>
-    <th>ID</th>
+    <th>Participants</th>
     {dateFormat.map((event,) => (
       <th>{event.dateF}<br></br>{event.startTime}<br></br>{event.endTime}<br></br><FontAwesomeIcon icon={faUsers}></FontAwesomeIcon>{event.numUser+1}</th>
     ))}
@@ -178,12 +172,12 @@ function AddParticipation() {
 
     {vote &&
     <tr>
-      <td>{CurrentUser.username}</td>  
+      <td>{CurrentUser.username} (you)</td>  
       {Options.map(event => {
             const bool = CurrentUser.options.some(theevent => event.idDate === theevent.idDate);
             return (
               <td key={event.idDate}>
-                {bool ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faX} />}
+                {bool ? <FontAwesomeIcon size="xl" icon={faCheckSquare} style={{ color: 'green' }}></FontAwesomeIcon> : <FontAwesomeIcon icon={faXmarkSquare}  size="xl" style={{ color: 'red' }} />}
               </td>
             );
           })} 
@@ -194,7 +188,7 @@ function AddParticipation() {
     <td>{organizer.username} Organise</td> 
     {
         Options.map(event => (
-          <td><FontAwesomeIcon icon={faCheck}></FontAwesomeIcon></td>
+          <td><FontAwesomeIcon size="xl" icon={faCheckSquare} style={{ color: 'green' }}></FontAwesomeIcon></td>
         ))} 
    
     </tr>
@@ -206,7 +200,7 @@ function AddParticipation() {
             const bool = user.options.some(theevent => event.idDate === theevent.idDate);
             return (
               <td key={event.idDate}>
-                {bool ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faX} />}
+                {bool ? <FontAwesomeIcon size="xl" icon={faCheckSquare} style={{ color: 'green' }}></FontAwesomeIcon> :<FontAwesomeIcon icon={faXmarkSquare}  size="xl" style={{ color: 'red' }} />}
               </td>
             );
           })}
@@ -237,6 +231,11 @@ function AddParticipation() {
     </div>
     
       }
+
+      
+</div>
+      </section>
+      </main>
 
         </div>
     )

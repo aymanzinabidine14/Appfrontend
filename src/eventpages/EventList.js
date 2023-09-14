@@ -3,7 +3,11 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 function EventList() {
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  
   const [events, setEvents] = useState([]);
+
 
   useEffect(() => {
     fetchEvents();
@@ -19,25 +23,39 @@ function EventList() {
   };
 
   return (
-    <div>
-      <div className="card-grid">
-        {events.map(event => (
-          <Link to={`/event/${event.IdBooking}`} key={event.IdBooking}>
-            {/* Use Link to navigate to event details with event ID */}
-            <div className="card" style={{ width: '20rem', height: '31rem' }}>
-              <img src={event.imageFilePath} className="card-img-top" style={{ width: '320px', height: '200px', overflow: 'hidden' }} alt="Event" />
-              <div className="card-body">
-                <h5 className="card-title">{event.name}</h5>
-                <p className="card-text">{event.description}</p>
-                <br></br>
-                <a href="#" className="btn btn-primary">
-                  Book Now
-                </a>
-              </div>
-            </div>
-          </Link>
-        ))}
+
+  <div>
+    
+    <main id="main" class="main">
+
+<div class="pagetitle">
+      <h1>List Event</h1>
+</div>
+
+
+  <div class="row row-cols-1 row-cols-md-4 g-4">
+  {events.map(event => (
+  <Link to={`/event/${event.IdBooking}`} key={event.IdBooking}>
+
+  <div class="col">
+    <div class="card">
+      <img src={event.imageFilePath} class="card-img-top" alt="Event"></img>
+      <div class="card-body">
+       
+        <h5 class="card-title">hello</h5>
+
+        <a href={`/event/${event.IdBooking}`} class="btn btn-success">Plus</a>
+
       </div>
+    </div>
+  </div>
+
+  </Link>
+
+  ))}
+  </div>
+
+  </main>
     </div>
   );
 }

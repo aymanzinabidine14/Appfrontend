@@ -7,7 +7,7 @@ import {faCalendarDays,faCheck,faTrash,faUsers } from '@fortawesome/free-solid-s
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 
-const spacing = 30;
+const spacing = 70;
 const width = {
   width: spacing + 'rem',  
 };
@@ -21,6 +21,8 @@ const styles = {
 
 
 function Home() {
+
+//window.location.reload();     
 
 const iduser = JSON.parse(localStorage.getItem('user'));
 const [sandagesc,setSandagesc]= useState([]);
@@ -113,19 +115,31 @@ const loadALL = () => {
 
 return (
 
+
+
+
+<main id="main" class="main">
+
 <div class="home" style={styles}>
 <div class="card" style={width}>
   <div class="card-body">
-  <div class="card-body d-flex justify-content-between align-items-center">
-    <h5 class="card-title">Invitations {iduser}</h5>
+  
+  <div class="card-body d-flex align-items-center">
 
-    <DropdownButton id="dropdown-basic-button" title={dropdownTitle}>
-            <Dropdown.Item onClick={() => setDropdownTitle('Received')}>Received</Dropdown.Item>
-            <Dropdown.Item onClick={() => setDropdownTitle('Sent')}>Sent</Dropdown.Item>
-            <Dropdown.Item onClick={() => setDropdownTitle('All')}>All</Dropdown.Item>
+    <h5 class="card-title mx-2">Invitations</h5>
 
-          </DropdownButton>
-      </div>
+
+    <DropdownButton  title={dropdownTitle} class="mx-2">
+        <Dropdown.Item onClick={() => setDropdownTitle('Received')}>Received</Dropdown.Item>
+        <Dropdown.Item onClick={() => setDropdownTitle('Sent')}>Sent</Dropdown.Item>
+        <Dropdown.Item onClick={() => setDropdownTitle('All')}>All</Dropdown.Item>
+    </DropdownButton>
+
+    <Link to="/Newsandage" type="button" class="btn btn-outline-success mx-2" >New</Link>
+
+    
+</div>
+
   {dropdownTitle === 'Sent' && (
   <div class="list-group">
   {
@@ -154,6 +168,8 @@ sandagesc.map((sandage,index)=>(
     }
 </div>
   )}
+
+  
 {dropdownTitle === 'Received' && (
   <div class="list-group">
   {
@@ -197,6 +213,7 @@ allsandage.map((sandage,index)=>(
   </div>
 </div>
 </div>
+</main>
   )
 }
 

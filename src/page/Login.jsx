@@ -9,8 +9,10 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    
+    //window.location.reload();          
+
     const navigate = useNavigate();
+    
     async function login(event) {
         event.preventDefault();
         try {
@@ -27,8 +29,21 @@ function Login() {
              else if(res.data.message === "Login Success")
              { 
               const user = res.data.idUser;
+              const role=res.data.role;
+              const username=res.data.username;
+
               localStorage.setItem('user', JSON.stringify(user));
-              navigate(`/home`); 
+              localStorage.setItem('role', JSON.stringify(role));
+              localStorage.setItem('username', JSON.stringify(username));
+
+
+
+              role === "USER" ?(
+                window.location.href = '/home'
+              ):(
+                window.location.href = '/admin'
+                )
+
 
             } 
               else 
@@ -47,75 +62,76 @@ function Login() {
       }
     return (
         
-        <MDBContainer fluid className="p-3 my-5 h-custom">
-        <MDBRow>
-  
-          <MDBCol col='10' md='6'>
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid" alt="Sample image" />
-          </MDBCol>
-  
-          <MDBCol col='4' md='6'>
-  
-            <div className="d-flex flex-row align-items-center justify-content-center">
-  
-              <p className="lead fw-normal mb-0 me-3">Sign in with</p>
-  
-              <MDBBtn floating size='md' tag='a' className='me-2'>
-                <MDBIcon fab icon='facebook-f' />
-              </MDBBtn>
-  
-              <MDBBtn floating size='md' tag='a'  className='me-2'>
-                <MDBIcon fab icon='twitter' />
-              </MDBBtn>
-  
-              <MDBBtn floating size='md' tag='a'  className='me-2'>
-                <MDBIcon fab icon='linkedin-in' />
-              </MDBBtn>
-  
+    
+        <main>
+    <div class="container">
+
+      <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+          
+              <div class="card mb-3">
+
+                <div class="card-body">
+
+                  <div class="pt-4 pb-2">
+                    <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
+                    <p class="text-center small">Enter your Email & password to login</p>
+                  </div>
+
+                  <form class="row g-3 needs-validation" novalidate>
+
+                    <div class="col-12">
+                      <label for="yourUsername" class="form-label">Email</label>
+                      <div class="input-group has-validation">
+                        <input type="text" name="username" class="form-control" id="yourUsername" 
+                          value={email}
+                          onChange={(event) => {
+                            setEmail(event.target.value);
+                          }}
+                        required></input>
+                        <div class="invalid-feedback">Please enter your username.</div>
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="yourPassword" class="form-label">Password</label>
+                      <input type="password" name="password" class="form-control" id="yourPassword"
+                      value={password}
+                      onChange={(event) => {
+                        setPassword(event.target.value);
+                      }}
+                      required></input>
+                      <div class="invalid-feedback">Please enter your password!</div>
+                    </div>
+
+                    <div class="col-12">
+                      
+                    </div>
+                    <div class="col-12">
+                      <button class="btn btn-primary w-100" type="submit" onClick={login}>Login</button>
+                    </div>
+                    <div class="col-12">
+                      <p class="small mb-0">Don't have account? <a href="/Register">Create an account</a></p>
+                    </div>
+                  </form>
+
+                </div>
+              </div>
             </div>
-  
-            <div className="divider d-flex align-items-center my-4">
-              <p className="text-center fw-bold mx-3 mb-0">Or</p>
-            </div>
-  
-            <MDBInput wrapperClass='mb-4' label='Email address' id='formControlLg' type='email' size="lg"
-             value={email}
-             onChange={(event) => {
-               setEmail(event.target.value);
-             }}
-            />
-            <MDBInput wrapperClass='mb-4' label='Password' id='formControlLg' type='password' size="lg"
-             value={password}
-             onChange={(event) => {
-               setPassword(event.target.value);
-             }}
-            />
-  
-            <div className="d-flex justify-content-between mb-4">
-              <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
-              <a href="!#">Forgot password?</a>
-            </div>
-  
-            <div className='text-center text-md-start mt-4 pt-2'>
-              <MDBBtn className="mb-0 px-5" size='lg' onClick={login}>Login</MDBBtn>
-              <p className="small fw-bold mt-2 pt-1 mb-2">Don't have an account? <a href="/Register" className="link-danger">Register</a></p>
-            </div>
-  
-          </MDBCol>
-  
-        </MDBRow>
-     
-        <div className="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
-  
-          <div className="text-white mb-3 mb-md-0">
-            Copyright © 2020. All rights reserved MeetX.
           </div>
-        
-       
         </div>
+
+      </section>
+
+    </div>
+  </main>
   
-      </MDBContainer>
-    );
-  }
+
+
+
+    );}
   
   export default Login;

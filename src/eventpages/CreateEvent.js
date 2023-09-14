@@ -1,12 +1,16 @@
-import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link,Navigate } from 'react-router-dom';
+import React, { useState ,useEffect} from 'react';
+
 
 
 const BookingForm = () => {
+
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+
   const initialValues = {
     name: '',
     place: '',
@@ -17,6 +21,7 @@ const BookingForm = () => {
     placesAvailable: '',
     imageFilePath: '',
   };
+
 
   const validationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
@@ -53,9 +58,34 @@ const BookingForm = () => {
       // Handle errors
       console.error('Error adding event:', error);
     }
+
+    setShouldRedirect(true);
+
   };
 
+  
+if (shouldRedirect) {
+  return <Navigate to="/eventManagement" />;
+}
+
   return (
+
+<main id="main" class="main">
+
+<div class="pagetitle">
+      <h1>Add New Event</h1>
+</div> 
+
+
+
+<section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Event Details</h5>
+
     <Container>
       <Row>
         <Col>
@@ -107,7 +137,7 @@ const BookingForm = () => {
         Start Hour
       </label>
       <Field
-        type="text"
+        type="time"
         id="startHour"
         name="startHour"
         className="form-control"
@@ -120,7 +150,7 @@ const BookingForm = () => {
         End Hour
       </label>
       <Field
-        type="text"
+        type="time"
         id="endHour"
         name="endHour"
         className="form-control"
@@ -170,7 +200,7 @@ const BookingForm = () => {
     <div className="mb-3">
                 {/* Use Bootstrap grid system for button placement */}
                 <div className="d-flex justify-content-between">
-                  <Link to="/admin">
+                  <Link to="/eventManagement">
                     <Button type="button" variant="primary">
                       Back
                     </Button>
@@ -185,6 +215,9 @@ const BookingForm = () => {
         </Col>
       </Row>
     </Container>
+
+    </div></div></div></div></section>
+    </main>
   );
 };
 

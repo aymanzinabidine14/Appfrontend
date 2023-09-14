@@ -2,10 +2,13 @@ import axios from 'axios';
 import  React,{ useEffect,useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faCalendarDays,faCheck,faUser,faUsers,faX} from '@fortawesome/free-solid-svg-icons';
+import {faAudioDescription, faBarsStaggered, faCalendarDays,faCheck,faCheckSquare,faCircle,faUser,faUsers,faX, faXmarkSquare} from '@fortawesome/free-solid-svg-icons';
 import { useNavigate,Link,useParams } from "react-router-dom";
 
 
+const breadcrumbStyle = {
+  '--bs-breadcrumb-divider': "''", // Définissez la propriété CSS ici
+};
 
 
 
@@ -124,132 +127,141 @@ function SandageInfo() {
 
     return(
         <div>
-        
-    
-    <div class="container mt-5">
-        <div class="card mx-auto" style={{ width: '60rem' }}>
-            <div class="card-body d-flex flex-row">
+      
+   
+<main id="main" class="main">
 
-                <div class="col-md-6">
-                  <h2>{SandageInfo.titre}</h2>  
-                  <p>You are the organizer of the group event</p>
 
-                  {SandageInfo.booking !== null && (
-                  <div>
+<section class="section">
+  <div class="row">
+   
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{SandageInfo.titre}</h5>
 
-                  <p><FontAwesomeIcon icon={faCalendarDays}></FontAwesomeIcon>  {OptionBooked.dateF} • {OptionBooked.startTime}-{OptionBooked.endTime}</p>
-                  <p><FontAwesomeIcon icon={faUsers}></FontAwesomeIcon>  {OptionBooked.numUser} invited</p>
+          <nav class="d-flex justify-content-end" style={breadcrumbStyle} aria-label="breadcrumb">
+            <ol class="breadcrumb">
+
+            {SandageInfo.booking == null && (
+              <li class="breadcrumb-item"><Link  to={`/UpdateSandage/${id}`}  className="btn btn-info ">Edit</Link></li>
+
+            )}
+              <li class="breadcrumb-item"><button className="btn btn-danger " onClick={handledeletesandage}>delete</button></li>
+
+              {SandageInfo.booking == null && (
+
+              <li class="breadcrumb-item"><button className="btn btn-primary " onClick={handleCopyLink}>copy Link</button></li>
+              )}
+
+
+            </ol>
+          </nav>
+
+
+
+          <p><FontAwesomeIcon icon={faUser}  size="xl"/> You are the organizer of the group event</p>
+
+
+          <p><FontAwesomeIcon icon={faBarsStaggered} size="xl"></FontAwesomeIcon> {SandageInfo.description}</p>
+
+          {SandageInfo.booking !== null && (
+          <div>
+          <div class="alert alert-success" role="alert" style={{width: '300px'}}>
+          <FontAwesomeIcon icon={faCalendarDays} size="xl"></FontAwesomeIcon>  {OptionBooked.dateF} • {OptionBooked.startTime}-{OptionBooked.endTime}
+          </div>
+          <p><FontAwesomeIcon icon={faUsers} size="xl"></FontAwesomeIcon>  Participants :</p>
                   
                   {Participants.map(user => (
-                  <p><FontAwesomeIcon icon={faUser}></FontAwesomeIcon> {user.username}</p>
+                  <p><FontAwesomeIcon icon={faCheck} size="lg"  style={{ color: 'green' }} ></FontAwesomeIcon> {user.username}</p>
                   ))}
                   </div>
-                  )}
+          )}
 
-                </div>
 
-                <div class="col-md-6 mt-5">
 
-               <div className="d-flex justify-content-end">
 
-               {SandageInfo.booking == null && (
-                <div>
-               <button className="btn btn-light "style={{ marginRight: '10px' }}>Preview</button>
-               <Link  to={`/UpdateSandage/${id}`}  className="btn btn-light "style={{ marginRight: '10px' }}>Edit</Link>
-               </div>
-               )}
-
-               <button className="btn btn-danger "style={{ marginRight: '10px' }} onClick={handledeletesandage}>delete</button>
-               <button className="btn btn-primary "style={{ marginRight: '10px' }}onClick={handleCopyLink}>copy Link</button>
-
-               </div>
-                
-                </div>
-             
-            </div>
         </div>
-    </div>
+      </div>
 
 
-<br></br>
 
-    {SandageInfo.booking == null && (
+      {SandageInfo.booking == null && (
     
-      <div className="container">
-      <div className="table-responsive">
-        <table className="table table-bordered">
-    <thead>
-          <tr>
-    <th>ID</th>
-    {dateFormat.map((event,) => (
-      <th>{event.dateF}<br></br>{event.startTime}<br></br>{event.endTime}<br></br><FontAwesomeIcon icon={faUsers}></FontAwesomeIcon>{event.numUser+1}</th>
-    ))}
-  </tr>
-  </thead>
-    <tbody>
-    <tr>
-        <td>{organizer.username}</td>
-        {
-        options.map(event => (
-          <td><FontAwesomeIcon icon={faCheck}></FontAwesomeIcon></td>
-        ))}
-        </tr>
-
-
-        {
-  Participants.length > 0 ? (
-    <>
-      {Participants.map(user => (
-        <tr key={user.IdUser}>
-          <td>{user.username}</td>
-          {options.map(event => {
-            const bool = user.options.some(theevent => event.idDate === theevent.idDate);
-            return (
-              <td key={event.idDate}>
-                {bool ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faX} />}
-              </td>
-            );
-          })}
-        </tr>
+    <div className="container">
+    <div className="table-responsive">
+      <table className="table table-bordered">
+  <thead>
+        <tr>
+  <th>Participants</th>
+  {dateFormat.map((event,) => (
+    <th>{event.dateF}<br></br>{event.startTime}<br></br>{event.endTime}<br></br><FontAwesomeIcon icon={faUsers}></FontAwesomeIcon>{event.numUser+1}</th>
+  ))}
+</tr>
+</thead>
+  <tbody>
+  <tr>
+      <td>{organizer.username} (you)</td>
+      {
+      options.map(event => (
+        <td><FontAwesomeIcon icon={faCheckSquare}  size="xl"  style={{ color: 'green' }}></FontAwesomeIcon></td>
       ))}
-
-      <tr>
-        <th>
-          <button class="btn btn-success" type="submit" onClick={handleBookSubmit}>Book it</button>
-        </th>
-        {options.map(event => (
-          <th>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="inlineRadioOptions"
-                id={`inlineRadio${event.idDate}`}
-                value={event.idDate}
-                onChange={handleRadioChange}
-              />
-            </div>
-          </th>
-        ))}
       </tr>
-    </>
-  ) : (
+
+
+      {
+Participants.length > 0 ? (
+  <>
+    {Participants.map(user => (
+      <tr key={user.IdUser}>
+        <td>{user.username}</td>
+        {options.map(event => {
+          const bool = user.options.some(theevent => event.idDate === theevent.idDate);
+          return (
+            <td key={event.idDate}>
+              {bool ? <FontAwesomeIcon size="xl" icon={faCheckSquare} style={{ color: 'green' }} /> : <FontAwesomeIcon icon={faXmarkSquare}  size="xl" style={{ color: 'red' }} />}
+            </td>
+          );
+        })}
+      </tr>
+    ))}
+
     <tr>
-      <td colSpan={options.length + 1}>Aucun participant n'est disponible.</td>
+      <th>
+        <button class="btn btn-success" type="submit" onClick={handleBookSubmit}>Book it</button>
+      </th>
+      {options.map(event => (
+        <th>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="inlineRadioOptions"
+              id={`inlineRadio${event.idDate}`}
+              value={event.idDate}
+              onChange={handleRadioChange}
+            />
+          </div>
+        </th>
+      ))}
     </tr>
-  )
+  </>
+) : (
+  <tr>
+    <td colSpan={options.length + 1}>No participants yet .</td>
+  </tr>
+)
 }
 
-
-
-
-           
-           
-          </tbody>
-        </table>
-      </div>
+        </tbody>
+      </table>
     </div>
-   )}
+  </div>
+ )}
+
+  </div>
+</section>
+
+</main>
 
   </div>
 

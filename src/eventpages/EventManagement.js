@@ -3,6 +3,9 @@ import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
 import UpdateEvent from './UpdateEvent';
 
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+
 
 function EventManagement() {
   const [events, setEvents] = useState([]);
@@ -35,61 +38,92 @@ function EventManagement() {
       console.log('Delete button clicked and confirmed');
 
       try {
-        await axios.delete(`http://localhost:8080/delete/${event.idBooking}`);
+        await axios.delete(`http://localhost:8080/deleteBooking/${event.IdBooking}`);
         fetchEvents();
         setSelectedEvent(null);
       } catch (error) {
         console.error('Error deleting event:', error);
       }
-    } else {
+    } 
+    else {
       console.log('Delete button clicked but not confirmed');
     }
   };
 
-  const handleEventUpdate = () => {
-    fetchEvents();
-    setSelectedEvent(null);
-  };
+ 
 
   return (
+
+    <main id="main" class="main">
+
+<div class="pagetitle">
+      <h1>Event Management</h1>
+</div> 
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Event List</h5>
+
+
     <div className="event-management-container">
-      <h1 className="page-title">Event Management</h1>
+      
       <form>
         <Link to="/add">
-          <button className="create-event-button" type="button">
+          <button className="btn btn-success" type="button">
             Create Event
           </button>
         </Link>
       </form>
 
-      <ul className="event-list">
-        {events.map((event) => (
-          <li key={event.id} className="event-item">
-            {event.name}
-            <button
-              className="update-button"
-              type="button"
-              onClick={() => handleEventSelect(event)}
-            >
-              Update
-            </button>
-            <button
-              className="delete-button"
-              type="button"
-              onClick={() => handleDeleteEvent(event)}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
-      {selectedEvent && (
-        <div>
-          <UpdateEvent selectedEvent={selectedEvent} onUpdate={() => handleEventUpdate()} />
-          
-        </div>
-      )}
+
+      <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th scope="col">Event Title</th>
+                    <th scope="col">Place</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Place</th>
+                    <th scope="col">Action</th>
+
+
+
+                  </tr>
+                </thead>
+                <tbody>
+                {events.map((event) => (
+                  <tr>
+                    <td>{event.name}</td>
+                    <td>{event.place}</td>
+                    <td>{event.date} {event.startHour}</td>
+                    <td>{event.placesAvailable}</td>
+
+                    <td>
+
+      <p><button className="btn btn-danger" onClick={()=>handleDeleteEvent(event)}><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button></p>
+      <p> <Link to={`/update/${event.IdBooking}`}><button className="btn btn-success"><FontAwesomeIcon icon={faEdit}></FontAwesomeIcon></button></Link></p>
+
+
+      </td>
+                  </tr>
+                ))}
+
+
+
+                  </tbody>
+      </table>
+
+     
+      
     </div>
+    </div>
+    </div>
+    </div>
+    </div></section>
+    </main>
   );
 }
 
