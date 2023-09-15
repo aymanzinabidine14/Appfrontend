@@ -183,10 +183,13 @@ function SandageInfo() {
         </div>
       </div>
 
-
-
+     
       {SandageInfo.booking == null && (
-    
+    <>
+    <div class="pagetitle">
+    <h1>Availabilities :</h1>
+    </div>
+
     <div className="container">
     <div className="table-responsive">
       <table className="table table-bordered">
@@ -256,6 +259,8 @@ Participants.length > 0 ? (
       </table>
     </div>
   </div>
+  </>
+ 
  )}
 
   </div>

@@ -41,7 +41,7 @@ function Login() {
               role === "USER" ?(
                 window.location.href = '/home'
               ):(
-                window.location.href = '/admin'
+                window.location.href = '/Dashboard'
                 )
 
 

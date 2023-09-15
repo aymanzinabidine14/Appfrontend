@@ -154,7 +154,15 @@ function AddParticipation() {
         </div>
       </div>
 
+
+      
+      
     {SandageInfo.booking === null &&
+<>
+<div class="pagetitle">
+<h1>Availabilities :</h1>
+</div>
+
     <div className="container mt-5">
       <div className="table-responsive">
         <table className="table table-bordered">
@@ -230,6 +238,7 @@ function AddParticipation() {
       </div>
     </div>
     
+    </>
       }
 
       

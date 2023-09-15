@@ -28,7 +28,7 @@ const iduser = JSON.parse(localStorage.getItem('user'));
 const [sandagesc,setSandagesc]= useState([]);
 const [sandagesp,setSandagesp]= useState([]);
 const [allsandage,setallsandage]=useState([]);
-const [dropdownTitle, setDropdownTitle] = useState('Sent');
+const [dropdownTitle, setDropdownTitle] = useState('All');
 
 useEffect(() => { loadSandagesC();},[]);
 
