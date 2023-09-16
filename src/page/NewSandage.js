@@ -138,7 +138,7 @@ if (shouldRedirect) {
 const ListEvent = [];
 Events.map((myevent) => {
 const day = {
-  title: "myevent.titre",
+  title: "Event",
   start: myevent.date+"T"+myevent.time,
   end:myevent.date+"T"+myevent.endtime,
 };

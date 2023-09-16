@@ -33,7 +33,7 @@ function EventList() {
 </div>
 
 
-  <div class="row row-cols-1 row-cols-md-4 g-4">
+  <div class="row row-cols-1 row-cols-md-3 g-4">
   {events.map(event => (
   <Link to={`/event/${event.IdBooking}`} key={event.IdBooking}>
 
@@ -42,7 +42,7 @@ function EventList() {
       <img src={event.imageFilePath} class="card-img-top" alt="Event"></img>
       <div class="card-body">
        
-        <h5 class="card-title">hello</h5>
+        <h5 class="card-title">{event.name}</h5>
 
         <a href={`/event/${event.IdBooking}`} class="btn btn-success">Plus</a>
 

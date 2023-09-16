@@ -192,8 +192,36 @@ sandagesp.map((sandage,index)=>(
   
   {dropdownTitle === 'All' && (
   <div class="list-group">
-  {
-allsandage.map((sandage,index)=>( 
+
+
+
+
+{
+sandagesc.map((sandage,index)=>(   
+
+<React.Fragment key={index}>
+<Link  to={`/SandageInfo/${sandage.idSandage}`} class="list-group-item list-group-item-action">
+
+<div class="d-flex w-100 justify-content-between">
+<h5 class="mb-1">{sandage.titre}</h5>
+</div>
+
+{sandage.booking === null ?(
+<p class="mb-1"><FontAwesomeIcon icon={faCalendarDays}></FontAwesomeIcon> {sandage.numberOption} Options</p>
+):(
+<p class="mb-1"><FontAwesomeIcon icon={faCheck}></FontAwesomeIcon> {sandage.booking.date}</p>
+)}
+<p class="mb-1"><FontAwesomeIcon icon={faUsers}></FontAwesomeIcon> {sandage.numberParticipant} invitees</p>
+
+</Link>
+<br /> 
+    </React.Fragment>
+
+    )
+    )
+    }
+{
+sandagesp.map((sandage,index)=>( 
 <React.Fragment key={index}>
 <Link  to={`/AddParticipation/${sandage.idSandage}`} class="list-group-item list-group-item-action">
 <div class="d-flex w-100 justify-content-between">
@@ -207,6 +235,8 @@ allsandage.map((sandage,index)=>(
     )
     )
     }
+
+
 </div>
   )}
 

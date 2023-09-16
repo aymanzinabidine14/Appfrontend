@@ -184,7 +184,7 @@ if (shouldRedirect) {
 </div>
 
 <form onSubmit={handleSaveSandage} class="mx-5">
-<button class="btn btn-success" type="submit">Create invite and Continue</button>
+<button class="btn btn-success" type="submit">Update</button>
 </form>
 
 </div>
